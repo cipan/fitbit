@@ -1,0 +1,34 @@
+Workout Quality Prediction
+========================================================
+
+
+The following code loads the required packages and data into R. The columns 8-160 are chosen because the first 8 are information that doesn't relate to the actual work out. The model is trained using the treebag method, using all of the variables to predict "classe". This is done because of lecture suggestion that tree models handle large amounts of variables well and look for relationships between variables.
+
+NOTE: The model training never finished, it appears that I have some sort of issue with training. The training method ran for 4 hours then crashed R. I'm not sure what to do about this - Knit HTML will not work until the model is build, obviously. 
+```{r}
+library(ggplot2)
+library(caret)
+setwd("~/Desktop/Learning project")
+training <- read.csv("pml-training.csv")
+training <- training[,8:160]
+model <- train(classe ~., data= training, method = 'treebag')
+
+```
+
+This code would apply the prediction model to the testing data; if the train function ever completed..
+```{r}
+testingAll <- read.csv("pml-testing.csv")
+testing <- testingAll[,8:159]
+prediction <- predict(model, newdata = testing)
+
+```
+
+The following plots would allow us to see how well the model performed and see how it actually worked through the tree plot. Again, the model never completed.
+```{r fig.width=7, fig.height=6}
+library(rattle)
+fancyRpartPlot(model$finalModel)
+# plot(model$finalModel, uniform=TRUE, main="Classification Tree")
+# text(model$finalModel, use.n=TRUE, all=TRUE, cex=.8)
+confusionMatrix(prediction, testingAll$classe)
+```
+
